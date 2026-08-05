@@ -238,6 +238,55 @@ h1 {
   font-weight: 800;
 }
 
+.records-link:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.admin-auth-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.admin-auth-modal.hidden {
+  display: none;
+}
+
+.admin-auth-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 10, 20, 0.72);
+  backdrop-filter: blur(6px);
+}
+
+.admin-auth-card {
+  position: relative;
+  z-index: 1;
+  width: min(420px, 100%);
+  text-align: left;
+}
+
+.admin-auth-card > p:not(.eyebrow):not(.form-error) {
+  text-align: left;
+}
+
+.admin-auth-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.admin-auth-actions .btn {
+  flex: 1;
+}
+
 .welcome-card h2 {
   font-size: 1.75rem;
   margin-bottom: 0.75rem;
@@ -362,6 +411,25 @@ h1 {
 }
 
 .records-subtitle {
+  display: none;
+}
+
+.admin-access-badge {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 0.5rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  border: 1px solid #cbd5e1;
+  background: #f8fafc;
+  color: #475569;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.admin-access-badge.hidden {
   display: none;
 }
 

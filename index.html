@@ -58,6 +58,7 @@
             <p class="eyebrow">Event dashboard</p>
             <h2>Player leaderboard &amp; records</h2>
             <p id="adminSummary" class="records-subtitle">Loading records…</p>
+            <span id="adminAccessBadge" class="admin-access-badge hidden">Read-only view</span>
           </div>
           <button id="adminBackBtn" class="btn btn-secondary records-back-btn" type="button">← Back to login</button>
         </div>
@@ -101,7 +102,7 @@
                     <th>Correct</th>
                     <th>Accuracy</th>
                     <th>Completed</th>
-                    <th>Actions</th>
+                    <th id="adminActionsHeader">Actions</th>
                   </tr>
                 </thead>
                 <tbody id="adminRecordsBody"></tbody>
@@ -198,6 +199,24 @@
     </section>
 
     <footer>Cloudera Knowledge Challenge · Event Demo · Created by Vikas Srivastava</footer>
+  </div>
+
+  <div id="adminAuthModal" class="admin-auth-modal hidden" role="dialog" aria-modal="true" aria-labelledby="adminAuthTitle">
+    <div id="adminAuthBackdrop" class="admin-auth-backdrop" aria-hidden="true"></div>
+    <form id="adminAuthForm" class="admin-auth-card login-card">
+      <p class="eyebrow">Admin access</p>
+      <h2 id="adminAuthTitle">Sign in to view records</h2>
+      <p>Enter admin credentials to open the player records dashboard.</p>
+      <label for="adminUsername" align="left">Username</label>
+      <input id="adminUsername" name="username" type="text" autocomplete="username" required maxlength="40" placeholder="Admin username">
+      <label for="adminPassword" align="left">Password</label>
+      <input id="adminPassword" name="password" type="password" autocomplete="current-password" required maxlength="80" placeholder="Password">
+      <p id="adminAuthError" class="form-error" aria-live="polite"></p>
+      <div class="admin-auth-actions">
+        <button id="adminAuthCancelBtn" class="btn btn-secondary" type="button">Cancel</button>
+        <button class="btn btn-primary" type="submit">Sign in</button>
+      </div>
+    </form>
   </div>
 
   <script src="app.js"></script>

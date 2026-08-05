@@ -8,6 +8,9 @@
   const DB_NAME = 'clouderaQuizDB'
   const DB_VERSION = 2
   const QUESTIONS_URL = 'questions.json'
+  const ADMIN_USERNAME = 'admin'
+  const ADMIN_PASSWORD_FULL = 'Password1'
+  const ADMIN_PASSWORD_READONLY = 'admin'
 
   let topics = []
   let topicColorMap = {}
@@ -58,6 +61,13 @@
   const adminAnalyticsPanel = document.getElementById('adminAnalyticsPanel')
   const downloadCsvBtn = document.getElementById('downloadCsvBtn')
   const resetRecentBtn = document.getElementById('resetRecentBtn')
+  const adminAuthModal = document.getElementById('adminAuthModal')
+  const adminAuthForm = document.getElementById('adminAuthForm')
+  const adminAuthError = document.getElementById('adminAuthError')
+  const adminAuthCancelBtn = document.getElementById('adminAuthCancelBtn')
+  const adminAuthBackdrop = document.getElementById('adminAuthBackdrop')
+  const adminAccessBadge = document.getElementById('adminAccessBadge')
+  const adminActionsHeader = document.getElementById('adminActionsHeader')
 
   function normalizeQuestion(rawQuestion, topicLabel, questionIndex) {
     const text = (rawQuestion.question || rawQuestion.text || '').trim()
@@ -154,6 +164,7 @@
   let editingRecordId = null
   let adminActiveTab = 'all'
   let cachedAdminRecords = []
+  let adminAccessLevel = null
 
   function formatDateTime(timestamp) {
     if (!timestamp) return '—'
@@ -343,7 +354,27 @@
     return text
   }
 
+  function canAdminWrite() {
+    return adminAccessLevel === 'full'
+  }
+
+  function applyAdminAccessUi() {
+    const isReadOnly = adminAccessLevel === 'readonly'
+    adminAccessBadge.classList.toggle('hidden', !isReadOnly)
+    adminActionsHeader?.classList.toggle('hidden', isReadOnly)
+    downloadCsvBtn.classList.toggle('hidden', !canAdminWrite() || adminActiveTab !== 'all')
+    resetRecentBtn.classList.toggle('hidden', !canAdminWrite() || adminActiveTab !== 'recent')
+  }
+
+  function resolveAdminAccessLevel(username, password) {
+    if (username !== ADMIN_USERNAME) return null
+    if (password === ADMIN_PASSWORD_FULL) return 'full'
+    if (password === ADMIN_PASSWORD_READONLY) return 'readonly'
+    return null
+  }
+
   function downloadRecordsCsv(records) {
+    if (!canAdminWrite()) return
     if (!records.length) {
       window.alert('No player records to download.')
       return
@@ -391,8 +422,8 @@
     adminTabAll.setAttribute('aria-selected', tabName === 'all' ? 'true' : 'false')
     adminTabRecent.setAttribute('aria-selected', tabName === 'recent' ? 'true' : 'false')
     adminTabAnalytics.setAttribute('aria-selected', tabName === 'analytics' ? 'true' : 'false')
-    downloadCsvBtn.classList.toggle('hidden', tabName !== 'all')
-    resetRecentBtn.classList.toggle('hidden', tabName !== 'recent')
+    downloadCsvBtn.classList.toggle('hidden', tabName !== 'all' || !canAdminWrite())
+    resetRecentBtn.classList.toggle('hidden', tabName !== 'recent' || !canAdminWrite())
     adminTableTitle.textContent = tabName === 'all'
       ? 'All Players'
       : tabName === 'recent'
@@ -973,6 +1004,8 @@
 
   async function renderAdminRecords(records) {
     adminRecordsBody.innerHTML = ''
+    const isReadOnly = !canAdminWrite()
+    adminActionsHeader?.classList.toggle('hidden', isReadOnly)
 
     let visibleRecords = records
     if (adminActiveTab === 'recent') {
@@ -1001,7 +1034,7 @@
     }
 
     visibleRecords.forEach((record, index) => {
-      if (editingRecordId === record.id) {
+      if (!isReadOnly && editingRecordId === record.id) {
         const topicLabel = getRecordTopic(record)
         const editRow = document.createElement('tr')
         editRow.className = 'records-edit-row'
@@ -1040,6 +1073,12 @@
         : 0
       const topicLabel = getRecordTopic(record)
       const row = document.createElement('tr')
+      const actionsCell = isReadOnly
+        ? ''
+        : `<td class="records-actions">
+          <button class="tbl-btn tbl-btn-edit" type="button">Edit</button>
+          <button class="tbl-btn tbl-btn-delete" type="button">Delete</button>
+        </td>`
       row.innerHTML = `
         <td>${index + 1}</td>
         <td>${escapeHTML(record.name)}</td>
@@ -1050,16 +1089,15 @@
         <td>${record.correctCount}/${record.answeredCount}</td>
         <td>${accuracyValue}%</td>
         <td>${formatDateTime(record.completedAt)}</td>
-        <td class="records-actions">
-          <button class="tbl-btn tbl-btn-edit" type="button">Edit</button>
-          <button class="tbl-btn tbl-btn-delete" type="button">Delete</button>
-        </td>
+        ${actionsCell}
       `
-      row.querySelector('.tbl-btn-edit').addEventListener('click', () => {
-        editingRecordId = record.id
-        renderAdminPanel(records)
-      })
-      row.querySelector('.tbl-btn-delete').addEventListener('click', () => handleDeleteRecord(record))
+      if (!isReadOnly) {
+        row.querySelector('.tbl-btn-edit').addEventListener('click', () => {
+          editingRecordId = record.id
+          renderAdminPanel(records)
+        })
+        row.querySelector('.tbl-btn-delete').addEventListener('click', () => handleDeleteRecord(record))
+      }
       adminRecordsBody.appendChild(row)
     })
   }
@@ -1070,9 +1108,28 @@
     return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`
   }
 
+  function openAdminAuthModal() {
+    adminAuthError.textContent = ''
+    adminAuthForm.reset()
+    adminAuthModal.classList.remove('hidden')
+    adminAuthForm.querySelector('#adminUsername').focus()
+  }
+
+  function closeAdminAuthModal() {
+    adminAuthModal.classList.add('hidden')
+    adminAuthError.textContent = ''
+    adminAuthForm.reset()
+  }
+
   async function openAdminScreen() {
+    if (!adminAccessLevel) {
+      openAdminAuthModal()
+      return
+    }
+
     adminError.textContent = ''
     editingRecordId = null
+    applyAdminAccessUi()
     setAdminTab('all')
     showScreen('admin')
     try {
@@ -1084,7 +1141,26 @@
     }
   }
 
+  function handleAdminAuthSubmit(event) {
+    event.preventDefault()
+    adminAuthError.textContent = ''
+    const form = new FormData(adminAuthForm)
+    const username = form.get('username').trim()
+    const password = form.get('password')
+
+    const accessLevel = resolveAdminAccessLevel(username, password)
+    if (!accessLevel) {
+      adminAuthError.textContent = 'Invalid username or password.'
+      return
+    }
+
+    adminAccessLevel = accessLevel
+    closeAdminAuthModal()
+    openAdminScreen()
+  }
+
   async function handleSaveEdit(event) {
+    if (!canAdminWrite()) return
     event.preventDefault()
     adminError.textContent = ''
     const form = event.currentTarget
@@ -1130,6 +1206,7 @@
   }
 
   async function handleDeleteRecord(record) {
+    if (!canAdminWrite()) return
     const confirmed = window.confirm(`Delete record for ${record.name}? This cannot be undone.`)
     if (!confirmed) return
     adminError.textContent = ''
@@ -1145,6 +1222,7 @@
   }
 
   async function handleResetRecent() {
+    if (!canAdminWrite()) return
     const confirmed = window.confirm('Clear the recent players list? Saved records will remain in All Players.')
     if (!confirmed) return
     adminError.textContent = ''
@@ -1473,10 +1551,14 @@
 
   spinBtn.addEventListener('click', spinWheel)
   playAgainBtn.addEventListener('click', resetGame)
-  viewRecordsLink.addEventListener('click', openAdminScreen)
+  viewRecordsLink.addEventListener('click', openAdminAuthModal)
+  adminAuthForm.addEventListener('submit', handleAdminAuthSubmit)
+  adminAuthCancelBtn.addEventListener('click', closeAdminAuthModal)
+  adminAuthBackdrop.addEventListener('click', closeAdminAuthModal)
   adminBackBtn.addEventListener('click', () => {
     editingRecordId = null
     adminError.textContent = ''
+    adminAccessLevel = null
     showScreen('login')
   })
   adminTabAll.addEventListener('click', () => setAdminTab('all'))
