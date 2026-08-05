@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cloudera Evolve 2026 Challenge 60 Second Quiz</title>
+  <meta name="description" content="Spin the wheel, test your Cloudera knowledge in 60 seconds!">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="logo-row">
+        <span class="logo-dot" aria-hidden="true"></span>
+        <h1>Cloudera Evolve 2026 Challenge</h1>
+      </div>
+      <p class="subtitle">Spin · Learn · Score — 60 seconds to prove your expertise</p>
+    </header>
+
+    <!-- Login -->
+    <section id="screen-login" class="screen active" aria-label="Player login">
+      <div class="login-layout">
+        <div class="ready-card">
+          <p class="eyebrow">Event Quiz</p>
+          <h2>Ready to play?</h2>
+          <p>Spin the wheel, answer questions, and earn a place in the winners leaderboard.</p>
+          <ul class="login-rules">
+            <li align="left">Choose a topic with the wheel</li>
+            <li align="left">Answer before the 60-second timer ends</li>
+            <li align="left">Every correct answer earns points</li>
+          </ul>
+        </div>
+        <form id="loginForm" class="login-card">
+          <h2>Player login</h2>
+          <p>Enter your details to continue.</p>
+          <label for="playerName" align="left">Name</label>
+          <input id="playerName" name="name" type="text" autocomplete="name" required maxlength="60" placeholder="Your full name">
+          <label for="playerMobile" align="left">Mobile number</label>
+          <input id="playerMobile" name="mobile" type="tel" inputmode="tel" autocomplete="tel" required maxlength="20" placeholder="Your mobile number">
+          <label for="playerCompany" align="left">Company</label>
+          <input id="playerCompany" name="company" type="text" autocomplete="organization" required maxlength="80" placeholder="Your company name">
+          <p id="loginError" class="form-error" aria-live="polite"></p>
+          <button class="btn btn-primary" type="submit">Continue →</button>
+          <p class="login-records-wrap">
+            <button id="viewRecordsLink" class="records-link" type="button" aria-label="View all player records">
+              View player records (<span id="recordsCount">0</span>)
+            </button>
+          </p>
+        </form>
+      </div>
+    </section>
+
+    <!-- Admin records -->
+    <section id="screen-admin" class="screen" aria-label="Player records">
+      <div class="records-page">
+        <div class="records-toolbar">
+          <div class="records-toolbar-left">
+            <p class="eyebrow">Event dashboard</p>
+            <h2>Player leaderboard &amp; records</h2>
+            <p id="adminSummary" class="records-subtitle">Loading records…</p>
+          </div>
+          <button id="adminBackBtn" class="btn btn-secondary records-back-btn" type="button">← Back to login</button>
+        </div>
+
+        <div id="adminStats" class="records-kpis hidden" aria-label="Summary statistics">
+          <div class="records-kpi"><span class="records-kpi-label">Players</span><strong id="statTotalPlayers">0</strong></div>
+          <div class="records-kpi"><span class="records-kpi-label">Top score</span><strong id="statTopScore">0</strong></div>
+          <div class="records-kpi"><span class="records-kpi-label">Avg score</span><strong id="statAvgScore">0</strong></div>
+          <div class="records-kpi"><span class="records-kpi-label">Avg accuracy</span><strong id="statAvgAccuracy">0%</strong></div>
+        </div>
+
+        <p id="adminError" class="form-error records-error" aria-live="polite"></p>
+
+        <div class="records-panel">
+          <div class="records-panel-header">
+            <div class="admin-tabs" role="tablist" aria-label="Admin record views">
+              <button id="adminTabAll" class="admin-tab active" type="button" role="tab" aria-selected="true" aria-controls="adminPanelAll" data-tab="all">All Players</button>
+              <button id="adminTabRecent" class="admin-tab" type="button" role="tab" aria-selected="false" aria-controls="adminPanelRecent" data-tab="recent">Recent Players</button>
+              <button id="adminTabAnalytics" class="admin-tab" type="button" role="tab" aria-selected="false" aria-controls="adminPanelAnalytics" data-tab="analytics">Analytics</button>
+            </div>
+            <div class="admin-tab-actions">
+              <button id="downloadCsvBtn" class="btn btn-secondary admin-action-btn" type="button">Download CSV</button>
+              <button id="resetRecentBtn" class="btn btn-secondary admin-action-btn hidden" type="button">Reset Recent</button>
+            </div>
+          </div>
+
+          <h3 id="adminTableTitle" class="records-table-title">All Players</h3>
+          <p id="adminTableCount" class="records-table-meta">0 records</p>
+
+          <div id="adminRecordsView">
+            <div class="records-table-scroll">
+              <table id="adminRecordsTable" class="records-table hidden" aria-label="All player records">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Mobile</th>
+                    <th>Company</th>
+                    <th>Topic</th>
+                    <th>Score</th>
+                    <th>Correct</th>
+                    <th>Accuracy</th>
+                    <th>Completed</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="adminRecordsBody"></tbody>
+              </table>
+
+              <div id="adminEmpty" class="records-empty hidden">
+                <p>No player records yet.</p>
+                <span>Complete a quiz to populate the leaderboard.</span>
+              </div>
+            </div>
+          </div>
+
+          <div id="adminAnalyticsPanel" class="admin-analytics hidden" aria-label="Event analytics"></div>
+        </div>
+      </div>
+    </section>
+    <!-- Wheel -->
+    <section id="screen-wheel" class="screen" aria-label="Topic wheel">
+      <div class="wheel-section">
+        <div class="wheel-container">
+          <div class="wheel-pointer" aria-hidden="true"></div>
+          <canvas id="wheelCanvas" role="img" aria-label="Wheel of fortune with Cloudera technology topics"></canvas>
+          <div class="wheel-center" aria-hidden="true">SPIN</div>
+        </div>
+        <p id="wheelStatus" class="wheel-status">Spin the wheel to pick your topic!</p>
+        <button id="spinBtn" class="btn btn-primary" type="button" aria-label="Spin the wheel">
+          🎡 Spin the Wheel
+        </button>
+      </div>
+    </section>
+
+    <!-- Quiz -->
+    <section id="screen-quiz" class="screen" aria-label="Quiz">
+      <div class="quiz-header">
+        <span id="topicBadge" class="topic-badge">
+          <span id="topicDot" class="topic-dot"></span>
+          <span class="topic-label">Topic</span>
+        </span>
+        <div class="timer-block">
+          <div class="timer-ring" aria-label="Time remaining">
+            <svg viewBox="0 0 64 64" aria-hidden="true">
+              <circle class="timer-bg" cx="32" cy="32" r="26"></circle>
+              <circle id="timerProgress" class="timer-progress" cx="32" cy="32" r="26"></circle>
+            </svg>
+            <span id="timerValue" class="timer-value">60</span>
+          </div>
+        </div>
+        <div class="score-block">
+          <div class="score-label">Score</div>
+          <div id="scoreValue" class="score-value">0</div>
+        </div>
+      </div>
+
+      <div class="quiz-card">
+        <p id="questionNumber" class="question-number">Question 1</p>
+        <h2 id="questionText" class="question-text">Loading question…</h2>
+        <div id="optionsGrid" class="options-grid" role="group" aria-label="Answer options"></div>
+        <div id="feedbackBar" class="feedback-bar neutral" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <!-- Results -->
+    <section id="screen-results" class="screen" aria-label="Results">
+      <div class="results-card">
+        <div id="resultsIcon" class="results-icon" aria-hidden="true">🏆</div>
+        <h2 id="resultsTitle">Time's Up!</h2>
+        <p id="resultsTopic" class="results-topic">Topic: CDP</p>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <div id="finalScore" class="stat-value">0</div>
+            <div class="stat-label">Score</div>
+          </div>
+          <div class="stat-item">
+            <div id="finalCorrect" class="stat-value">0/0</div>
+            <div class="stat-label">Correct</div>
+          </div>
+          <div class="stat-item">
+            <div id="finalAccuracy" class="stat-value">0%</div>
+            <div class="stat-label">Accuracy</div>
+          </div>
+        </div>
+        <p id="rankMessage" class="rank-message">Thanks for playing!</p>
+        <section class="leaderboard" aria-labelledby="leaderboardTitle">
+          <div class="leaderboard-heading">
+            <h3 id="leaderboardTitle">Current winners</h3>
+            <button id="resetWinnersBtn" class="reset-winners-btn" type="button">Reset winners</button>
+          </div>
+          <ol id="leaderboardList" class="leaderboard-list"></ol>
+        </section>
+        <button id="playAgainBtn" class="btn btn-primary" type="button" aria-label="Back to login">
+          Back to Login
+        </button>
+      </div>
+    </section>
+
+    <footer>Cloudera Knowledge Challenge · Event Demo · Created by Vikas Srivastava</footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

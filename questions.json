@@ -1,0 +1,862 @@
+{
+  "version": 1,
+  "description": "Cloudera Knowledge Challenge question bank",
+  "topics": [
+    {
+      "id": "cdp",
+      "label": "CDP",
+      "color": "#FF5500",
+      "questions": [
+        {
+          "question": "What does CDP stand for in the Cloudera ecosystem?",
+          "options": [
+            "Cloudera Data Platform",
+            "Cloud Data Pipeline",
+            "Cluster Deployment Platform",
+            "Central Data Processor"
+          ],
+          "answer": "Cloudera Data Platform"
+        },
+        {
+          "question": "Which deployment models does CDP support?",
+          "options": [
+            "Public cloud only",
+            "On-premises and hybrid only",
+            "Public cloud, private cloud, and on-premises",
+            "Edge devices only"
+          ],
+          "answer": "Public cloud, private cloud, and on-premises"
+        },
+        {
+          "question": "What is the primary purpose of CDP Shared Data Experience (SDX)?",
+          "options": [
+            "Replace HDFS with object storage",
+            "Provide unified security, governance, and metadata across workloads",
+            "Manage Kubernetes clusters",
+            "Schedule batch ETL jobs"
+          ],
+          "answer": "Provide unified security, governance, and metadata across workloads"
+        },
+        {
+          "question": "Which service in CDP handles data catalog and lineage?",
+          "options": [
+            "Cloudera Manager",
+            "Apache Atlas",
+            "Apache Knox",
+            "Apache Oozie"
+          ],
+          "answer": "Apache Atlas"
+        },
+        {
+          "question": "CDP Private Cloud is typically deployed on which infrastructure?",
+          "options": [
+            "Bare metal only",
+            "OpenShift or embedded Kubernetes",
+            "AWS Lambda",
+            "Desktop workstations"
+          ],
+          "answer": "OpenShift or embedded Kubernetes"
+        },
+        {
+          "question": "What storage layer does CDP commonly use in modern deployments?",
+          "options": [
+            "Local disk arrays only",
+            "Cloud object storage (S3, ADLS, GCS) with Ozone",
+            "Tape backup systems",
+            "Email attachments"
+          ],
+          "answer": "Cloud object storage (S3, ADLS, GCS) with Ozone"
+        },
+        {
+          "question": "Which CDP experience is optimized for interactive SQL analytics?",
+          "options": [
+            "CDP Data Engineering",
+            "CDP Data Hub",
+            "CDP Operational Database",
+            "CDP Data Visualization only"
+          ],
+          "answer": "CDP Data Hub"
+        },
+        {
+          "question": "What role does Apache Knox play in CDP?",
+          "options": [
+            "Stream processing engine",
+            "Perimeter security gateway for REST APIs",
+            "Batch scheduler",
+            "Columnar file format"
+          ],
+          "answer": "Perimeter security gateway for REST APIs"
+        },
+        {
+          "question": "Replication Manager in CDP is primarily used for what?",
+          "options": [
+            "Copying HDFS or object storage data between clusters",
+            "Training ML models",
+            "Indexing web pages",
+            "Managing LDAP users"
+          ],
+          "answer": "Copying HDFS or object storage data between clusters"
+        },
+        {
+          "question": "Which statement best describes CDP Public Cloud?",
+          "options": [
+            "A downloadable VM image only",
+            "A SaaS offering on AWS, Azure, and GCP",
+            "A desktop IDE for Python",
+            "A hardware appliance sold by Cloudera"
+          ],
+          "answer": "A SaaS offering on AWS, Azure, and GCP"
+        }
+      ]
+    },
+    {
+      "id": "spark",
+      "label": "Apache Spark",
+      "color": "#E25A1C",
+      "questions": [
+        {
+          "question": "What is the fundamental data abstraction in Spark?",
+          "options": [
+            "RDD and DataFrame/Dataset",
+            "Relational table only",
+            "Key-value map only",
+            "XML document"
+          ],
+          "answer": "RDD and DataFrame/Dataset"
+        },
+        {
+          "question": "Which component handles cluster resource management in a typical Spark-on-YARN deployment?",
+          "options": [
+            "Spark Driver only",
+            "YARN ResourceManager",
+            "HBase Master",
+            "ZooKeeper alone"
+          ],
+          "answer": "YARN ResourceManager"
+        },
+        {
+          "question": "What does Spark Catalyst optimize?",
+          "options": [
+            "Network cable routing",
+            "SQL and DataFrame logical plans",
+            "HDFS block placement only",
+            "Kerberos ticket renewal"
+          ],
+          "answer": "SQL and DataFrame logical plans"
+        },
+        {
+          "question": "Spark Structured Streaming treats a stream as what?",
+          "options": [
+            "An unbounded table",
+            "A single CSV file",
+            "A static RDD only",
+            "A message queue broker"
+          ],
+          "answer": "An unbounded table"
+        },
+        {
+          "question": "Where is intermediate shuffle data often stored during Spark jobs?",
+          "options": [
+            "Local disk or memory (shuffle files)",
+            "Only in HBase",
+            "Only in Kafka topics",
+            "In the Spark UI database"
+          ],
+          "answer": "Local disk or memory (shuffle files)"
+        },
+        {
+          "question": "What is a Spark Executor responsible for?",
+          "options": [
+            "Submitting the job to YARN",
+            "Running tasks and storing cached data",
+            "Defining the SQL schema registry",
+            "Managing Ranger policies"
+          ],
+          "answer": "Running tasks and storing cached data"
+        },
+        {
+          "question": "Which API is recommended for new Spark batch ETL in Scala/Java?",
+          "options": [
+            "Spark RDD API only",
+            "Spark SQL DataFrame/Dataset API",
+            "MapReduce API",
+            "Pig Latin"
+          ],
+          "answer": "Spark SQL DataFrame/Dataset API"
+        },
+        {
+          "question": "What does adaptive query execution (AQE) in Spark do at runtime?",
+          "options": [
+            "Disables all caching",
+            "Re-optimizes plans based on runtime statistics",
+            "Forces single-node execution",
+            "Replaces YARN with Kubernetes"
+          ],
+          "answer": "Re-optimizes plans based on runtime statistics"
+        },
+        {
+          "question": "Spark MLlib is primarily used for what?",
+          "options": [
+            "Distributed machine learning pipelines",
+            "Log aggregation only",
+            "Kerberos authentication",
+            "HDFS replication"
+          ],
+          "answer": "Distributed machine learning pipelines"
+        },
+        {
+          "question": "Which storage formats integrate well with Spark for lakehouse patterns?",
+          "options": [
+            "Parquet, ORC, and Iceberg",
+            "GIF and PNG",
+            "WAV audio only",
+            "Plain text email"
+          ],
+          "answer": "Parquet, ORC, and Iceberg"
+        }
+      ]
+    },
+    {
+      "id": "hive",
+      "label": "Apache Hive",
+      "color": "#F4A024",
+      "questions": [
+        {
+          "question": "What query language does Apache Hive primarily use?",
+          "options": [
+            "HiveQL (SQL-like)",
+            "Cypher",
+            "SPARQL",
+            "XQuery"
+          ],
+          "answer": "HiveQL (SQL-like)"
+        },
+        {
+          "question": "What does the Hive Metastore store?",
+          "options": [
+            "Only raw HDFS bytes",
+            "Table schemas, partitions, and storage locations",
+            "Spark executor logs",
+            "NiFi flow definitions"
+          ],
+          "answer": "Table schemas, partitions, and storage locations"
+        },
+        {
+          "question": "Hive on Tez improves performance by doing what?",
+          "options": [
+            "Replacing SQL with Python",
+            "Using a DAG-based execution engine instead of MapReduce",
+            "Disabling all indexes",
+            "Running only on a single core"
+          ],
+          "answer": "Using a DAG-based execution engine instead of MapReduce"
+        },
+        {
+          "question": "Which file format is commonly used with Hive for columnar storage?",
+          "options": [
+            "Parquet or ORC",
+            "BMP images",
+            "MP3 audio",
+            "JSON Lines only with no compression"
+          ],
+          "answer": "Parquet or ORC"
+        },
+        {
+          "question": "What is a Hive partition?",
+          "options": [
+            "A physical subdirectory keyed by column values",
+            "A type of Kerberos realm",
+            "A Spark streaming checkpoint",
+            "A Ranger audit event"
+          ],
+          "answer": "A physical subdirectory keyed by column values"
+        },
+        {
+          "question": "Hive LLAP (Low Latency Analytical Processing) is designed for what?",
+          "options": [
+            "Interactive sub-second queries with persistent executors",
+            "Real-time credit card fraud only",
+            "Email delivery",
+            "DNS resolution"
+          ],
+          "answer": "Interactive sub-second queries with persistent executors"
+        },
+        {
+          "question": "Which engine can Hive use as an execution backend in modern CDP?",
+          "options": [
+            "Tez or Spark",
+            "Only MapReduce from 2006",
+            "Microsoft Access",
+            "SQLite on laptops"
+          ],
+          "answer": "Tez or Spark"
+        },
+        {
+          "question": "What happens when you run INSERT OVERWRITE on a partitioned Hive table?",
+          "options": [
+            "It replaces data in matching partitions",
+            "It deletes the metastore permanently",
+            "It stops YARN",
+            "It disables encryption"
+          ],
+          "answer": "It replaces data in matching partitions"
+        },
+        {
+          "question": "Hive ACID transactions require which table property?",
+          "options": [
+            "Transactional tables stored in ORC",
+            "Plain text CSV only",
+            "External tables on FTP",
+            "Views without storage"
+          ],
+          "answer": "Transactional tables stored in ORC"
+        },
+        {
+          "question": "How does Hive integrate with Apache Atlas in CDP?",
+          "options": [
+            "Atlas captures Hive metadata changes for lineage and classification",
+            "Atlas replaces the Hive Metastore entirely",
+            "Atlas only monitors NiFi",
+            "There is no integration"
+          ],
+          "answer": "Atlas captures Hive metadata changes for lineage and classification"
+        }
+      ]
+    },
+    {
+      "id": "kafka",
+      "label": "Apache Kafka",
+      "color": "#333333",
+      "questions": [
+        {
+          "question": "In Kafka, what is a topic?",
+          "options": [
+            "A categorized feed of records",
+            "A Kerberos principal",
+            "A Hive database",
+            "A Spark stage"
+          ],
+          "answer": "A categorized feed of records"
+        },
+        {
+          "question": "What guarantees ordering within a Kafka topic?",
+          "options": [
+            "Ordering is per partition",
+            "Ordering is global across all topics",
+            "Kafka does not preserve order",
+            "Ordering is per consumer group only"
+          ],
+          "answer": "Ordering is per partition"
+        },
+        {
+          "question": "What is the role of a Kafka broker?",
+          "options": [
+            "Stores and serves topic partitions",
+            "Compiles Spark jobs",
+            "Runs Hive queries",
+            "Manages HBase regions"
+          ],
+          "answer": "Stores and serves topic partitions"
+        },
+        {
+          "question": "What does a consumer group enable?",
+          "options": [
+            "Parallel consumption with one consumer per partition max",
+            "Unlimited duplicate reads with no coordination",
+            "Writing directly to HDFS",
+            "Replacing ZooKeeper entirely in all cases"
+          ],
+          "answer": "Parallel consumption with one consumer per partition max"
+        },
+        {
+          "question": "Kafka Connect is used for what?",
+          "options": [
+            "Integrating Kafka with external systems via connectors",
+            "Visualizing Ranger audits",
+            "Scheduling Oozie workflows",
+            "Managing LDAP groups"
+          ],
+          "answer": "Integrating Kafka with external systems via connectors"
+        },
+        {
+          "question": "What is the purpose of Kafka retention policy?",
+          "options": [
+            "Controls how long records are kept per topic",
+            "Sets Spark executor memory",
+            "Defines Hive partition columns",
+            "Configures SSL ciphers only"
+          ],
+          "answer": "Controls how long records are kept per topic"
+        },
+        {
+          "question": "Kafka Streams is best described as what?",
+          "options": [
+            "A client library for stream processing applications",
+            "A replacement for HDFS",
+            "A batch ETL scheduler",
+            "A SQL warehouse"
+          ],
+          "answer": "A client library for stream processing applications"
+        },
+        {
+          "question": "What component did older Kafka clusters use for coordination (being replaced by KRaft)?",
+          "options": [
+            "Apache ZooKeeper",
+            "Apache Tomcat",
+            "MySQL replication",
+            "Redis Sentinel"
+          ],
+          "answer": "Apache ZooKeeper"
+        },
+        {
+          "question": "Increasing Kafka topic partition count primarily improves what?",
+          "options": [
+            "Parallelism for producers and consumers",
+            "Single-key ordering across the topic",
+            "HDFS replication factor",
+            "Hive query compilation speed"
+          ],
+          "answer": "Parallelism for producers and consumers"
+        },
+        {
+          "question": "In CDP, Kafka is commonly paired with which ingestion tool?",
+          "options": [
+            "Apache NiFi or Spark Structured Streaming",
+            "Apache Ambari only",
+            "Microsoft Excel",
+            "FTP cron scripts only"
+          ],
+          "answer": "Apache NiFi or Spark Structured Streaming"
+        }
+      ]
+    },
+    {
+      "id": "impala",
+      "label": "Apache Impala",
+      "color": "#00A4EF",
+      "questions": [
+        {
+          "question": "Apache Impala is optimized for what type of workloads?",
+          "options": [
+            "Low-latency interactive SQL analytics",
+            "Long-running batch MapReduce only",
+            "Email relay",
+            "Video transcoding"
+          ],
+          "answer": "Low-latency interactive SQL analytics"
+        },
+        {
+          "question": "Impala reads data directly from where in typical deployments?",
+          "options": [
+            "HDFS, object storage, or HBase without MapReduce overhead",
+            "Only local laptop disks",
+            "Only relational Oracle tables via ODBC",
+            "Only Kafka topics"
+          ],
+          "answer": "HDFS, object storage, or HBase without MapReduce overhead"
+        },
+        {
+          "question": "Which daemon accepts client queries in Impala?",
+          "options": [
+            "impalad (with coordinator role)",
+            "NameNode only",
+            "ResourceManager only",
+            "Knox Gateway only"
+          ],
+          "answer": "impalad (with coordinator role)"
+        },
+        {
+          "question": "Impala shares metadata with which component?",
+          "options": [
+            "Hive Metastore",
+            "Kafka Connect",
+            "NiFi Registry",
+            "Oozie Server"
+          ],
+          "answer": "Hive Metastore"
+        },
+        {
+          "question": "What is Impala admission control used for?",
+          "options": [
+            "Limiting concurrent queries and resource usage",
+            "Encrypting data at rest",
+            "Creating Kafka topics",
+            "Managing Ranger plugins"
+          ],
+          "answer": "Limiting concurrent queries and resource usage"
+        },
+        {
+          "question": "Which file formats does Impala commonly query efficiently?",
+          "options": [
+            "Parquet, ORC, Avro, and text",
+            "Only encrypted PDF",
+            "Only binary executables",
+            "Only JPEG images"
+          ],
+          "answer": "Parquet, ORC, Avro, and text"
+        },
+        {
+          "question": "Impala UDFs allow you to do what?",
+          "options": [
+            "Extend SQL with custom scalar or aggregate functions",
+            "Replace HDFS with S3",
+            "Manage YARN queues visually",
+            "Configure SSL for Knox"
+          ],
+          "answer": "Extend SQL with custom scalar or aggregate functions"
+        },
+        {
+          "question": "How does Impala achieve distributed query execution?",
+          "options": [
+            "Fragments run in parallel across impalad nodes",
+            "Single-threaded execution on one node only",
+            "By exporting data to Excel first",
+            "Using only Hive MapReduce"
+          ],
+          "answer": "Fragments run in parallel across impalad nodes"
+        },
+        {
+          "question": "Impala caching (HDFS or data cache) helps with what?",
+          "options": [
+            "Faster repeated reads of hot datasets",
+            "Kerberos ticket renewal",
+            "NiFi provenance storage",
+            "Oozie workflow scheduling"
+          ],
+          "answer": "Faster repeated reads of hot datasets"
+        },
+        {
+          "question": "In CDP, Impala is often used alongside which governance tool?",
+          "options": [
+            "Apache Ranger for authorization",
+            "Apache Flume for log shipping only",
+            "Cron for scheduling only",
+            "FTP for data transfer only"
+          ],
+          "answer": "Apache Ranger for authorization"
+        }
+      ]
+    },
+    {
+      "id": "cm",
+      "label": "Cloudera Manager",
+      "color": "#2D6A4F",
+      "questions": [
+        {
+          "question": "What is the primary purpose of Cloudera Manager?",
+          "options": [
+            "End-to-end management of CDP clusters and services",
+            "Writing Spark applications",
+            "Designing NiFi flows only",
+            "Replacing the Hive Metastore"
+          ],
+          "answer": "End-to-end management of CDP clusters and services"
+        },
+        {
+          "question": "Cloudera Manager Agent runs on what?",
+          "options": [
+            "Each managed host in the cluster",
+            "Only the developer laptop",
+            "Only cloud load balancers",
+            "Only Kafka brokers"
+          ],
+          "answer": "Each managed host in the cluster"
+        },
+        {
+          "question": "What does Cloudera Manager Server provide?",
+          "options": [
+            "Central UI, configuration, monitoring, and lifecycle operations",
+            "Only log file storage",
+            "Only DNS services",
+            "Only email alerts without metrics"
+          ],
+          "answer": "Central UI, configuration, monitoring, and lifecycle operations"
+        },
+        {
+          "question": "Cloudera Manager uses what for metrics and time-series data?",
+          "options": [
+            "Time Series Database (TSDB) backed storage",
+            "Plain text files on USB drives",
+            "Kafka topics exclusively",
+            "Hive tables only"
+          ],
+          "answer": "Time Series Database (TSDB) backed storage"
+        },
+        {
+          "question": "What is a Cloudera Manager parcel?",
+          "options": [
+            "A packaged distribution of a component version for deployment",
+            "A shipping label for hardware",
+            "A Kafka consumer group",
+            "A Ranger policy template"
+          ],
+          "answer": "A packaged distribution of a component version for deployment"
+        },
+        {
+          "question": "Rolling restart in Cloudera Manager is used to what?",
+          "options": [
+            "Restart services with minimal downtime across the cluster",
+            "Delete all HDFS data",
+            "Disable Kerberos permanently",
+            "Remove all users from LDAP"
+          ],
+          "answer": "Restart services with minimal downtime across the cluster"
+        },
+        {
+          "question": "Cloudera Manager Host Inspector checks for what?",
+          "options": [
+            "Host health, configuration, and common issues before upgrades",
+            "SQL query performance only",
+            "NiFi flow design patterns",
+            "Git commit history"
+          ],
+          "answer": "Host health, configuration, and common issues before upgrades"
+        },
+        {
+          "question": "What alert types can Cloudera Manager generate?",
+          "options": [
+            "Health, configuration, and metric-based alerts",
+            "Only physical hardware temperature from laptops",
+            "Only social media mentions",
+            "Only manual sticky notes"
+          ],
+          "answer": "Health, configuration, and metric-based alerts"
+        },
+        {
+          "question": "Cloudera Manager backup and disaster recovery features focus on what?",
+          "options": [
+            "Metadata, configurations, and data replication strategies",
+            "Replacing Spark with Flink",
+            "Compiling Java code",
+            "Managing office printers"
+          ],
+          "answer": "Metadata, configurations, and data replication strategies"
+        },
+        {
+          "question": "Kerberos integration in Cloudera Manager helps with what?",
+          "options": [
+            "Automating secure cluster authentication setup",
+            "Disabling all encryption",
+            "Running queries in Impala only",
+            "Creating Kafka topics automatically"
+          ],
+          "answer": "Automating secure cluster authentication setup"
+        }
+      ]
+    },
+    {
+      "id": "ranger",
+      "label": "Apache Ranger",
+      "color": "#5C2D91",
+      "questions": [
+        {
+          "question": "Apache Ranger provides what for the data platform?",
+          "options": [
+            "Centralized security administration and fine-grained authorization",
+            "Stream processing",
+            "SQL query optimization",
+            "HDFS block replication"
+          ],
+          "answer": "Centralized security administration and fine-grained authorization"
+        },
+        {
+          "question": "Ranger policies are enforced through what mechanism?",
+          "options": [
+            "Plugins embedded in services like Hive, HDFS, and Kafka",
+            "Manual edits to each server config file only",
+            "Email approval workflows only",
+            "DNS TXT records"
+          ],
+          "answer": "Plugins embedded in services like Hive, HDFS, and Kafka"
+        },
+        {
+          "question": "What does Ranger Audit store?",
+          "options": [
+            "Access attempts and policy evaluation logs",
+            "Only Spark shuffle files",
+            "Only NiFi flow snapshots",
+            "Only GPU temperature readings"
+          ],
+          "answer": "Access attempts and policy evaluation logs"
+        },
+        {
+          "question": "Ranger Tag-Based Policies use metadata from which tool?",
+          "options": [
+            "Apache Atlas classification tags",
+            "Apache Oozie bundles",
+            "Cloudera Manager parcels",
+            "Kafka consumer offsets"
+          ],
+          "answer": "Apache Atlas classification tags"
+        },
+        {
+          "question": "Ranger KMS in CDP is primarily responsible for what?",
+          "options": [
+            "Encryption key management for HDFS and other services",
+            "Scheduling Hive queries",
+            "Running Spark executors",
+            "Managing NiFi processors"
+          ],
+          "answer": "Encryption key management for HDFS and other services"
+        },
+        {
+          "question": "Which access types can Ranger control for Hive?",
+          "options": [
+            "Select, update, create, drop, and admin privileges",
+            "Only network ping",
+            "Only SSH login",
+            "Only browser bookmarks"
+          ],
+          "answer": "Select, update, create, drop, and admin privileges"
+        },
+        {
+          "question": "Ranger User Sync integrates with what?",
+          "options": [
+            "LDAP/AD and Unix users for group membership",
+            "Only local CSV files on laptops",
+            "Only Twitter accounts",
+            "Only Bluetooth devices"
+          ],
+          "answer": "LDAP/AD and Unix users for group membership"
+        },
+        {
+          "question": "Row-level filtering in Ranger can restrict what?",
+          "options": [
+            "Which rows a user sees in query results",
+            "Which CPUs are installed",
+            "Which Kafka brokers exist",
+            "Which DNS servers respond"
+          ],
+          "answer": "Which rows a user sees in query results"
+        },
+        {
+          "question": "Column-level masking in Ranger is used to what?",
+          "options": [
+            "Hide or transform sensitive column values for authorized users",
+            "Delete entire clusters",
+            "Disable SSL everywhere",
+            "Replace Parquet with CSV"
+          ],
+          "answer": "Hide or transform sensitive column values for authorized users"
+        },
+        {
+          "question": "Ranger admin UI allows security teams to do what?",
+          "options": [
+            "Define roles, policies, and review audits centrally",
+            "Write Spark Scala code",
+            "Design HBase row keys only",
+            "Configure GPU drivers"
+          ],
+          "answer": "Define roles, policies, and review audits centrally"
+        }
+      ]
+    },
+    {
+      "id": "nifi",
+      "label": "Apache NiFi",
+      "color": "#728E4A",
+      "questions": [
+        {
+          "question": "Apache NiFi is primarily designed for what?",
+          "options": [
+            "Visual data flow automation and ingestion",
+            "Batch SQL warehousing only",
+            "GPU model training only",
+            "LDAP user management only"
+          ],
+          "answer": "Visual data flow automation and ingestion"
+        },
+        {
+          "question": "In NiFi, what is a FlowFile?",
+          "options": [
+            "A unit of data with content and attributes flowing through the system",
+            "A Kerberos ticket",
+            "A Hive partition folder",
+            "A Spark RDD partition"
+          ],
+          "answer": "A unit of data with content and attributes flowing through the system"
+        },
+        {
+          "question": "What does provenance in NiFi track?",
+          "options": [
+            "The lineage and history of each FlowFile through the flow",
+            "Only CPU temperature",
+            "Only Ranger policies",
+            "Only Oozie job status"
+          ],
+          "answer": "The lineage and history of each FlowFile through the flow"
+        },
+        {
+          "question": "NiFi back pressure prevents what problem?",
+          "options": [
+            "Downstream processors from being overwhelmed by upstream data",
+            "All encryption on the cluster",
+            "All Kafka retention",
+            "All HDFS replication"
+          ],
+          "answer": "Downstream processors from being overwhelmed by upstream data"
+        },
+        {
+          "question": "Which NiFi feature supports zero-data-loss delivery semantics?",
+          "options": [
+            "Persistent repositories and write-ahead logging on nodes",
+            "Disabling all disk writes",
+            "Running only in browser memory",
+            "Using unconfirmed UDP only"
+          ],
+          "answer": "Persistent repositories and write-ahead logging on nodes"
+        },
+        {
+          "question": "NiFi Registry is used for what?",
+          "options": [
+            "Version control and sharing of NiFi flow definitions",
+            "Managing Hive metastore backups",
+            "Running Impala queries",
+            "Storing Ranger audit logs only"
+          ],
+          "answer": "Version control and sharing of NiFi flow definitions"
+        },
+        {
+          "question": "Which protocol can NiFi use to ingest streaming data alongside Kafka?",
+          "options": [
+            "HTTP, Syslog, MQTT, and many others via processors",
+            "Only Morse code",
+            "Only fax machines",
+            "Only dial-up modems"
+          ],
+          "answer": "HTTP, Syslog, MQTT, and many others via processors"
+        },
+        {
+          "question": "NiFi Site-to-Site protocol enables what?",
+          "options": [
+            "Secure transfer of FlowFiles between NiFi clusters",
+            "Direct HBase region splitting",
+            "Hive LLAP caching",
+            "Spark driver failover only"
+          ],
+          "answer": "Secure transfer of FlowFiles between NiFi clusters"
+        },
+        {
+          "question": "What is a NiFi processor?",
+          "options": [
+            "A configurable component that performs an operation on FlowFiles",
+            "A type of Ranger policy",
+            "A YARN queue",
+            "A Hive UDF"
+          ],
+          "answer": "A configurable component that performs an operation on FlowFiles"
+        },
+        {
+          "question": "In CDP, NiFi is commonly used to land data into what?",
+          "options": [
+            "Kafka, HDFS, or cloud object storage for downstream analytics",
+            "Only local desktop folders",
+            "Only printed paper reports",
+            "Only email inboxes without parsing"
+          ],
+          "answer": "Kafka, HDFS, or cloud object storage for downstream analytics"
+        }
+      ]
+    }
+  ]
+}
