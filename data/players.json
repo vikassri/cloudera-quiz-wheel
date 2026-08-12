@@ -1,0 +1,36 @@
+{
+  "nextId": 3,
+  "gameResults": [
+    {
+      "id": 2,
+      "name": "Vikas Srivastava",
+      "mobile": "+6598203130",
+      "company": "Cloudera",
+      "topic": "Apache NiFi",
+      "topicLabel": "Apache NiFi",
+      "topicId": "nifi",
+      "score": 1100,
+      "correctCount": 8,
+      "answeredCount": 9,
+      "completedAt": 1786527732292
+    }
+  ],
+  "leaderboard": [
+    {
+      "id": 2,
+      "name": "Vikas Srivastava",
+      "mobile": "+6598203130",
+      "company": "Cloudera",
+      "topic": "Apache NiFi",
+      "topicLabel": "Apache NiFi",
+      "topicId": "nifi",
+      "score": 1100,
+      "correctCount": 8,
+      "answeredCount": 9,
+      "completedAt": 1786527732292
+    }
+  ],
+  "recentPlayerIds": [
+    2
+  ]
+}
