@@ -21,7 +21,11 @@ cp .env.example .env
 Edit `.env` with your project credentials (Settings → API):
 
 - `SUPABASE_URL` — Project URL
-- `SUPABASE_SERVICE_ROLE_KEY` — service role key (server only, never expose in the browser)
+- `SUPABASE_SECRET_KEY` — **Secret key** (`sb_secret_...`) from **Secret keys** section
+
+Do **not** use the publishable key (`sb_publishable_...`) — it cannot write to the database.
+
+Legacy projects can use `SUPABASE_SERVICE_ROLE_KEY` (JWT starting with `eyJ...`) instead.
 
 ### 3. Install and run
 

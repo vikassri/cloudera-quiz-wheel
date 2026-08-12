@@ -1434,7 +1434,11 @@
 
     saveScore()
       .then(renderLeaderboard)
-      .catch(() => renderLeaderboard([]))
+      .catch((error) => {
+        console.error('Failed to save score:', error)
+        renderLeaderboard([])
+        rankEl.textContent = 'Score could not be saved. Check server logs and Supabase config.'
+      })
     showScreen('results')
   }
 

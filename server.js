@@ -136,6 +136,12 @@ async function handleApi(request, response, url) {
     return
   }
 
+  if (url.pathname === '/api/health' && method === 'GET') {
+    await store.verifyConnection()
+    sendJson(response, 200, { ok: true, storage: 'supabase' })
+    return
+  }
+
   sendError(response, 404, 'API route not found.')
 }
 
@@ -150,11 +156,27 @@ const server = http.createServer(async (request, response) => {
     serveStatic(request, response)
   } catch (error) {
     const statusCode = error.statusCode || 500
+    if (statusCode >= 500) {
+      console.error(`[api] ${url.pathname}:`, error.message)
+    }
     sendError(response, statusCode, error instanceof Error ? error.message : 'Internal server error')
   }
 })
 
-server.listen(PORT, () => {
-  console.log(`Cloudera Quiz Wheel running at http://localhost:${PORT}`)
-  console.log('Player data: Supabase')
-})
+async function startServer() {
+  try {
+    await store.verifyConnection()
+    console.log('Supabase connected')
+  } catch (error) {
+    console.error('Supabase setup failed:', error.message)
+    console.error('Fix .env and run supabase/schema.sql, then restart.')
+    process.exit(1)
+  }
+
+  server.listen(PORT, () => {
+    console.log(`Cloudera Quiz Wheel running at http://localhost:${PORT}`)
+    console.log('Player data: Supabase')
+  })
+}
+
+startServer()
