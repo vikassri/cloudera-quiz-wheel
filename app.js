@@ -1522,7 +1522,7 @@
     } catch (error) {
       setQuestionLoadState({
         error: error instanceof Error
-          ? `${error.message}. Run "npm start" and verify questions.json exists.`
+          ? `${error.message}. Run "npm start", configure Supabase in .env, and verify questions.json exists.`
           : 'Unable to load questions.',
       })
     }

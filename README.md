@@ -1,37 +1,55 @@
 # Cloudera Quiz Wheel
 
-Spin-the-wheel quiz for Cloudera Evolve events. Player details and scores are stored in a local JSON file.
+Spin-the-wheel quiz for Cloudera Evolve events. Player details and scores are stored in **Supabase**.
 
-## Run locally
+## Setup
+
+### 1. Create Supabase tables
+
+In your [Supabase dashboard](https://supabase.com/dashboard) → **SQL Editor**, run:
+
+```
+supabase/schema.sql
+```
+
+### 2. Configure environment
 
 ```bash
+cp .env.example .env
+```
+
+Edit `.env` with your project credentials (Settings → API):
+
+- `SUPABASE_URL` — Project URL
+- `SUPABASE_SERVICE_ROLE_KEY` — service role key (server only, never expose in the browser)
+
+### 3. Install and run
+
+```bash
+npm install
 npm start
 ```
 
 Open http://localhost:3000
 
-## Player data file
+## Migrate existing local data
 
-All player records are read and written to:
+If you have records in `data/players.json` from the file-based version:
 
-```
-data/players.json
-```
-
-Structure:
-
-```json
-{
-  "nextId": 1,
-  "gameResults": [],
-  "leaderboard": [],
-  "recentPlayerIds": []
-}
+```bash
+npm run migrate:local
 ```
 
-Each completed quiz appends a record to `gameResults`. The server updates `leaderboard` (top 3) and `recentPlayerIds` (last 50) automatically.
+## Database schema
+
+| Table | Purpose |
+|-------|---------|
+| `game_results` | Player name, mobile, company, topic, score, accuracy |
+| `app_metadata` | Leaderboard snapshot and recent player IDs |
 
 ## API
+
+The frontend talks to the local server, which reads/writes Supabase:
 
 | Method | Path | Description |
 |--------|------|-------------|
@@ -46,5 +64,5 @@ Each completed quiz appends a record to `gameResults`. The server updates `leade
 
 ## Notes
 
-- Run via `npm start` — opening `index.html` directly in the browser will not persist data.
-- `data/players.json` is gitignored (contains attendee PII). Back it up before events.
+- The service role key stays on the server in `.env` — do not commit it.
+- Row Level Security is enabled on Supabase tables; the server bypasses it via the service role key.
