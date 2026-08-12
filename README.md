@@ -51,6 +51,39 @@ npm run migrate:local
 | `game_results` | Player name, mobile, company, topic, score, accuracy |
 | `app_metadata` | Leaderboard snapshot and recent player IDs |
 
+## Deploy to Netlify
+
+Netlify serves the static site **and** runs the API via serverless functions.
+
+### 1. Set environment variables
+
+In Netlify → **Site configuration → Environment variables**, add:
+
+| Variable | Value |
+|----------|-------|
+| `SUPABASE_URL` | Your Supabase project URL |
+| `SUPABASE_SECRET_KEY` | Secret key (`sb_secret_...`) |
+
+Do **not** commit these to git.
+
+### 2. Deploy
+
+Push to GitHub — Netlify builds automatically using `netlify.toml`.
+
+The `/api/*` routes are rewritten to a Netlify Function that reads/writes Supabase.
+
+### 3. Verify
+
+After deploy, open:
+
+```
+https://your-site.netlify.app/api/health
+```
+
+You should see: `{"ok":true,"storage":"supabase"}`
+
+If that fails, check Netlify function logs and confirm env vars are set.
+
 ## API
 
 The frontend talks to the local server, which reads/writes Supabase:

@@ -5,6 +5,7 @@ require('dotenv').config()
 const http = require('http')
 const fs = require('fs')
 const path = require('path')
+const { handleApiRequest } = require('./lib/api-handlers')
 const store = require('./lib/supabase-store')
 
 const PORT = Number(process.env.PORT) || 3000
@@ -80,69 +81,17 @@ function serveStatic(request, response) {
 }
 
 async function handleApi(request, response, url) {
-  const method = request.method || 'GET'
+  const body = ['POST', 'PUT', 'PATCH'].includes(request.method || 'GET')
+    ? JSON.stringify(await readJsonBody(request))
+    : ''
 
-  if (url.pathname === '/api/records' && method === 'GET') {
-    const records = await store.getAllRecords()
-    sendJson(response, 200, { records })
-    return
-  }
+  const result = await handleApiRequest({
+    method: request.method,
+    pathname: url.pathname,
+    body,
+  })
 
-  if (url.pathname === '/api/records' && method === 'POST') {
-    const payload = await readJsonBody(request)
-    const result = await store.createRecord(payload)
-    sendJson(response, 201, result)
-    return
-  }
-
-  const recordMatch = url.pathname.match(/^\/api\/records\/(\d+)$/)
-  if (recordMatch && method === 'PUT') {
-    const recordId = Number(recordMatch[1])
-    const payload = await readJsonBody(request)
-    const result = await store.updateRecord(recordId, payload)
-    sendJson(response, 200, result)
-    return
-  }
-
-  if (recordMatch && method === 'DELETE') {
-    const recordId = Number(recordMatch[1])
-    const result = await store.deleteRecord(recordId)
-    sendJson(response, 200, result)
-    return
-  }
-
-  if (url.pathname === '/api/leaderboard' && method === 'GET') {
-    const entries = await store.getLeaderboard()
-    sendJson(response, 200, { entries })
-    return
-  }
-
-  if (url.pathname === '/api/leaderboard' && method === 'PUT') {
-    const payload = await readJsonBody(request)
-    const entries = await store.setLeaderboard(payload.entries)
-    sendJson(response, 200, { entries })
-    return
-  }
-
-  if (url.pathname === '/api/recent' && method === 'GET') {
-    const entries = await store.getRecentPlayerIds()
-    sendJson(response, 200, { entries })
-    return
-  }
-
-  if (url.pathname === '/api/recent' && method === 'DELETE') {
-    const entries = await store.clearRecentPlayerIds()
-    sendJson(response, 200, { entries })
-    return
-  }
-
-  if (url.pathname === '/api/health' && method === 'GET') {
-    await store.verifyConnection()
-    sendJson(response, 200, { ok: true, storage: 'supabase' })
-    return
-  }
-
-  sendError(response, 404, 'API route not found.')
+  sendJson(response, result.statusCode, result.body)
 }
 
 const server = http.createServer(async (request, response) => {
