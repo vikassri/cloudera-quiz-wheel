@@ -281,10 +281,26 @@ h1 {
   display: flex;
   gap: 0.75rem;
   margin-top: 0.5rem;
+  align-items: stretch;
 }
 
 .admin-auth-actions .btn {
   flex: 1;
+  min-height: 3rem;
+  margin-top: 0;
+  padding: 0.875rem 1.25rem;
+  font-size: 1rem;
+  white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+  .admin-auth-actions {
+    flex-direction: column;
+  }
+
+  .admin-auth-actions .btn {
+    width: 100%;
+  }
 }
 
 .welcome-card h2 {

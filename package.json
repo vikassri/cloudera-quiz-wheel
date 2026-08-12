@@ -1,0 +1,10 @@
+{
+  "name": "cloudera-quiz-wheel",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cloudera Evolve quiz wheel with local file-backed player records",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  }
+}

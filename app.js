@@ -5,8 +5,7 @@
   const POINTS_PER_CORRECT = 100
   const SPIN_DURATION_MS = 4500
   const FEEDBACK_DELAY_MS = 900
-  const DB_NAME = 'clouderaQuizDB'
-  const DB_VERSION = 2
+  const API_BASE = '/api'
   const QUESTIONS_URL = 'questions.json'
   const ADMIN_USERNAME = 'admin'
   const ADMIN_PASSWORD_FULL = 'Password1'
@@ -160,7 +159,6 @@
   let timerInterval = null
   let isAnswering = false
   let player = null
-  let databasePromise = null
   let editingRecordId = null
   let adminActiveTab = 'all'
   let cachedAdminRecords = []
@@ -179,47 +177,39 @@
     return `${Math.round((correctCount / answeredCount) * 100)}%`
   }
 
+  async function apiRequest(path, options = {}) {
+    const response = await fetch(`${API_BASE}${path}`, {
+      headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
+      ...options,
+    })
+
+    if (!response.ok) {
+      const payload = await response.json().catch(() => ({}))
+      throw new Error(payload.error || `Request failed (${response.status})`)
+    }
+
+    if (response.status === 204) return null
+    return response.json()
+  }
+
   async function getAllGameResults() {
     try {
-      const db = await getDatabase()
-      const transaction = db.transaction('gameResults', 'readonly')
-      const request = transaction.objectStore('gameResults').getAll()
-      const results = await new Promise((resolve, reject) => {
-        request.onsuccess = () => resolve(request.result || [])
-        request.onerror = () => reject(request.error)
-      })
-      return results.sort((a, b) => (b.completedAt || 0) - (a.completedAt || 0))
+      const payload = await apiRequest('/records')
+      return payload.records || []
     } catch (_) {
       return []
     }
   }
 
   async function updateGameResult(record) {
-    const db = await getDatabase()
-    const transaction = db.transaction('gameResults', 'readwrite')
-    transaction.objectStore('gameResults').put(record)
-    await waitForTransaction(transaction)
-    await rebuildLeaderboard()
+    await apiRequest(`/records/${record.id}`, {
+      method: 'PUT',
+      body: JSON.stringify(record),
+    })
   }
 
   async function deleteGameResult(id) {
-    const db = await getDatabase()
-    const transaction = db.transaction('gameResults', 'readwrite')
-    transaction.objectStore('gameResults').delete(id)
-    await waitForTransaction(transaction)
-    await rebuildLeaderboard()
-  }
-
-  async function rebuildLeaderboard() {
-    const allResults = await getAllGameResults()
-    const topThree = [...allResults]
-      .sort((a, b) => b.score - a.score || b.correctCount - a.correctCount || a.completedAt - b.completedAt)
-      .slice(0, 3)
-    const db = await getDatabase()
-    const transaction = db.transaction('leaderboard', 'readwrite')
-    transaction.objectStore('leaderboard').put({ id: 'current', entries: topThree })
-    await waitForTransaction(transaction)
-    return topThree
+    await apiRequest(`/records/${id}`, { method: 'DELETE' })
   }
 
   async function refreshRecordsCount() {
@@ -228,45 +218,10 @@
     return results
   }
 
-  function getDatabase() {
-    if (databasePromise) return databasePromise
-    databasePromise = new Promise((resolve, reject) => {
-      const request = indexedDB.open(DB_NAME, DB_VERSION)
-      request.onupgradeneeded = () => {
-        const db = request.result
-        if (!db.objectStoreNames.contains('gameResults')) {
-          db.createObjectStore('gameResults', { keyPath: 'id', autoIncrement: true })
-        }
-        if (!db.objectStoreNames.contains('leaderboard')) {
-          db.createObjectStore('leaderboard', { keyPath: 'id' })
-        }
-        if (!db.objectStoreNames.contains('recentPlayers')) {
-          db.createObjectStore('recentPlayers', { keyPath: 'id' })
-        }
-      }
-      request.onsuccess = () => resolve(request.result)
-      request.onerror = () => reject(request.error)
-    })
-    return databasePromise
-  }
-
-  function waitForTransaction(transaction) {
-    return new Promise((resolve, reject) => {
-      transaction.oncomplete = () => resolve()
-      transaction.onerror = () => reject(transaction.error)
-      transaction.onabort = () => reject(transaction.error)
-    })
-  }
-
   async function getLeaderboard() {
     try {
-      const db = await getDatabase()
-      const transaction = db.transaction('leaderboard', 'readonly')
-      const request = transaction.objectStore('leaderboard').get('current')
-      return await new Promise((resolve, reject) => {
-        request.onsuccess = () => resolve(request.result ? request.result.entries : [])
-        request.onerror = () => reject(request.error)
-      })
+      const payload = await apiRequest('/leaderboard')
+      return payload.entries || []
     } catch (_) {
       return []
     }
@@ -286,60 +241,29 @@
       answeredCount,
       completedAt: Date.now(),
     }
-    const db = await getDatabase()
-    const scoreTransaction = db.transaction('gameResults', 'readwrite')
-    const recordId = await new Promise((resolve, reject) => {
-      const request = scoreTransaction.objectStore('gameResults').add(result)
-      request.onsuccess = () => resolve(request.result)
-      request.onerror = () => reject(request.error)
+    const payload = await apiRequest('/records', {
+      method: 'POST',
+      body: JSON.stringify(result),
     })
-    await waitForTransaction(scoreTransaction)
-    await addToRecentPlayers(recordId)
-
-    const topThree = await rebuildLeaderboard()
     refreshRecordsCount()
-    return topThree
+    return payload.leaderboard || []
   }
 
   async function getRecentPlayerIds() {
     try {
-      const db = await getDatabase()
-      const transaction = db.transaction('recentPlayers', 'readonly')
-      const request = transaction.objectStore('recentPlayers').get('current')
-      const result = await new Promise((resolve, reject) => {
-        request.onsuccess = () => resolve(request.result)
-        request.onerror = () => reject(request.error)
-      })
-      return result?.entries || []
+      const payload = await apiRequest('/recent')
+      return payload.entries || []
     } catch (_) {
       return []
     }
   }
 
-  async function addToRecentPlayers(recordId) {
-    const db = await getDatabase()
-    const recentIds = await getRecentPlayerIds()
-    const updatedIds = [recordId, ...recentIds.filter((id) => id !== recordId)].slice(0, 50)
-    const transaction = db.transaction('recentPlayers', 'readwrite')
-    transaction.objectStore('recentPlayers').put({ id: 'current', entries: updatedIds })
-    await waitForTransaction(transaction)
-    return updatedIds
-  }
-
   async function clearRecentPlayers() {
-    const db = await getDatabase()
-    const transaction = db.transaction('recentPlayers', 'readwrite')
-    transaction.objectStore('recentPlayers').put({ id: 'current', entries: [] })
-    await waitForTransaction(transaction)
+    await apiRequest('/recent', { method: 'DELETE' })
   }
 
-  async function removeFromRecentPlayers(recordId) {
-    const db = await getDatabase()
-    const recentIds = await getRecentPlayerIds()
-    const updatedIds = recentIds.filter((id) => id !== recordId)
-    const transaction = db.transaction('recentPlayers', 'readwrite')
-    transaction.objectStore('recentPlayers').put({ id: 'current', entries: updatedIds })
-    await waitForTransaction(transaction)
+  async function removeFromRecentPlayers(_recordId) {
+    // Recent list is updated by the server when records are deleted.
   }
 
   async function getRecentPlayerRecords(allRecords) {
@@ -1567,13 +1491,13 @@
   downloadCsvBtn.addEventListener('click', () => downloadRecordsCsv(cachedAdminRecords))
   resetRecentBtn.addEventListener('click', handleResetRecent)
   resetWinnersBtn.addEventListener('click', async () => {
-    const confirmed = window.confirm('Reset the current winners list? Saved player scores will remain in the database.')
+    const confirmed = window.confirm('Reset the current winners list? Saved player scores will remain in the data file.')
     if (!confirmed) return
     try {
-      const db = await getDatabase()
-      const transaction = db.transaction('leaderboard', 'readwrite')
-      transaction.objectStore('leaderboard').put({ id: 'current', entries: [] })
-      await waitForTransaction(transaction)
+      await apiRequest('/leaderboard', {
+        method: 'PUT',
+        body: JSON.stringify({ entries: [] }),
+      })
       renderLeaderboard([])
     } catch (_) {
       window.alert('Unable to reset the winners list. Please try again.')
@@ -1598,7 +1522,7 @@
     } catch (error) {
       setQuestionLoadState({
         error: error instanceof Error
-          ? `${error.message}. Serve this folder over HTTP and verify questions.json exists.`
+          ? `${error.message}. Run "npm start" and verify questions.json exists.`
           : 'Unable to load questions.',
       })
     }
