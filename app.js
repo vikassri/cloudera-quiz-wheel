@@ -2,7 +2,12 @@
   'use strict'
 
   const GAME_DURATION_SEC = 60
-  const POINTS_PER_CORRECT = 100
+  const POINTS_BASE = 100
+  const SPEED_BONUS_MAX = 50
+  const SPEED_WINDOW_MS = 8000
+  const POINTS_MIN_CORRECT = 50
+  const STREAK_BONUS = 50
+  const STREAK_THRESHOLD = 3
   const SPIN_DURATION_MS = 4500
   const FEEDBACK_DELAY_MS = 900
   const API_BASE = '/api'
@@ -158,6 +163,7 @@
   let timeRemaining = GAME_DURATION_SEC
   let timerInterval = null
   let isAnswering = false
+  let questionStartedAt = 0
   let player = null
   let editingRecordId = null
   let adminActiveTab = 'all'
@@ -1325,6 +1331,31 @@
     }
   }
 
+  function calculateAnswerScore(elapsedMs, streak) {
+    const clampedElapsed = Math.min(Math.max(elapsedMs, 0), SPEED_WINDOW_MS)
+    const speedRatio = 1 - clampedElapsed / SPEED_WINDOW_MS
+    const speedBonus = Math.round(SPEED_BONUS_MAX * speedRatio)
+    const baseWithSpeed = Math.max(POINTS_MIN_CORRECT, POINTS_BASE + speedBonus)
+    const streakBonus = streak >= STREAK_THRESHOLD ? STREAK_BONUS : 0
+
+    return {
+      total: baseWithSpeed + streakBonus,
+      speedBonus,
+      streakBonus,
+    }
+  }
+
+  function formatCorrectFeedback(scoring, streak) {
+    const parts = [`Correct! +${scoring.total} pts`]
+    if (scoring.speedBonus > 0) {
+      parts.push(`⚡ +${scoring.speedBonus} speed`)
+    }
+    if (scoring.streakBonus > 0) {
+      parts.push(`<span class="streak-badge">${streak} streak +${scoring.streakBonus}</span>`)
+    }
+    return parts.join(' · ')
+  }
+
   function shuffleQuestionOptions(options, correctIndex) {
     const order = options.map((_, index) => index)
     for (let i = order.length - 1; i > 0; i--) {
@@ -1352,6 +1383,7 @@
     feedbackBar.className = 'feedback-bar neutral'
     optionsGrid.innerHTML = ''
     isAnswering = false
+    questionStartedAt = Date.now()
 
     const shuffled = shuffleQuestionOptions(q.options, q.correct)
     currentDisplayCorrect = shuffled.correct
@@ -1382,14 +1414,12 @@
       streak += 1
       maxStreak = Math.max(maxStreak, streak)
       correctCount += 1
-      const streakBonus = streak >= 3 ? 50 : 0
-      score += POINTS_PER_CORRECT + streakBonus
+      const elapsedMs = Date.now() - questionStartedAt
+      const scoring = calculateAnswerScore(elapsedMs, streak)
+      score += scoring.total
       scoreValue.textContent = String(score)
       feedbackBar.className = 'feedback-bar correct'
-      feedbackBar.innerHTML =
-        streak >= 3
-          ? `Correct! +${POINTS_PER_CORRECT + streakBonus} pts <span class="streak-badge">${streak} streak!</span>`
-          : `Correct! +${POINTS_PER_CORRECT} pts`
+      feedbackBar.innerHTML = formatCorrectFeedback(scoring, streak)
     } else {
       clickedBtn.classList.add('incorrect')
       allBtns[currentDisplayCorrect].classList.add('correct')
