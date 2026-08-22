@@ -255,6 +255,10 @@
     return payload.leaderboard || []
   }
 
+  async function clearSession() {
+    await apiRequest('/recent', { method: 'DELETE' })
+  }
+
   async function getRecentPlayerIds() {
     try {
       const payload = await apiRequest('/recent')
@@ -265,7 +269,7 @@
   }
 
   async function clearRecentPlayers() {
-    await apiRequest('/recent', { method: 'DELETE' })
+    await clearSession()
   }
 
   async function removeFromRecentPlayers(_recordId) {
@@ -1153,11 +1157,13 @@
 
   async function handleResetRecent() {
     if (!canAdminWrite()) return
-    const confirmed = window.confirm('Clear the recent players list? Saved records will remain in All Players.')
+    const confirmed = window.confirm(
+      'Clear this session? Recent players and the game top 3 will reset. All-time records stay in All Players.'
+    )
     if (!confirmed) return
     adminError.textContent = ''
     try {
-      await clearRecentPlayers()
+      await clearSession()
       await renderAdminPanel(cachedAdminRecords)
     } catch (_) {
       adminError.textContent = 'Unable to reset recent players. Please try again.'
@@ -1525,13 +1531,12 @@
   downloadCsvBtn.addEventListener('click', () => downloadRecordsCsv(cachedAdminRecords))
   resetRecentBtn.addEventListener('click', handleResetRecent)
   resetWinnersBtn.addEventListener('click', async () => {
-    const confirmed = window.confirm('Reset the current winners list? Saved player scores will remain in the data file.')
+    const confirmed = window.confirm(
+      'Reset this session? Top 3 and recent players will clear. All-time records stay in admin.'
+    )
     if (!confirmed) return
     try {
-      await apiRequest('/leaderboard', {
-        method: 'PUT',
-        body: JSON.stringify({ entries: [] }),
-      })
+      await clearSession()
       renderLeaderboard([])
     } catch (_) {
       window.alert('Unable to reset the winners list. Please try again.')
