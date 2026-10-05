@@ -41,6 +41,8 @@
   const feedbackBar = document.getElementById('feedbackBar')
   const loginForm = document.getElementById('loginForm')
   const loginError = document.getElementById('loginError')
+  const clearLoginWinnersBtn = document.getElementById('clearLoginWinnersBtn')
+  const loginLeaderboardStatus = document.getElementById('loginLeaderboardStatus')
   const playAgainBtn = document.getElementById('playAgainBtn')
   const resetWinnersBtn = document.getElementById('resetWinnersBtn')
   const viewRecordsLink = document.getElementById('viewRecordsLink')
@@ -225,12 +227,8 @@
   }
 
   async function getLeaderboard() {
-    try {
-      const payload = await apiRequest('/leaderboard')
-      return payload.entries || []
-    } catch (_) {
-      return []
-    }
+    const payload = await apiRequest('/leaderboard')
+    return payload.entries || []
   }
 
   async function saveScore() {
@@ -843,8 +841,9 @@
     }[char]))
   }
 
-  function renderLeaderboard(entries) {
-    const list = document.getElementById('leaderboardList')
+  function renderLeaderboard(entries, listId = 'leaderboardList') {
+    const list = document.getElementById(listId)
+    if (!list) return
     list.innerHTML = ''
     const medals = ['🥇', '🥈', '🥉']
     for (let index = 0; index < 3; index += 1) {
@@ -856,6 +855,17 @@
         ? `<span class="place">${medals[index]}</span><span class="winner"><strong>${escapeHTML(entry.name)}</strong><small>${escapeHTML(entry.company)}</small></span><strong class="winner-score">${entry.score}</strong>`
         : `<span class="place">${index + 1}</span><span class="winner empty-winner">Open spot</span><strong class="winner-score">—</strong>`
       list.appendChild(item)
+    }
+  }
+
+  async function refreshLoginLeaderboard() {
+    loginLeaderboardStatus.textContent = ''
+    try {
+      renderLeaderboard(await getLeaderboard(), 'loginLeaderboardList')
+    } catch (error) {
+      renderLeaderboard([], 'loginLeaderboardList')
+      loginLeaderboardStatus.textContent = 'Unable to load recent winners. Please try again.'
+      console.error('Failed to load recent winners:', error)
     }
   }
 
@@ -1167,6 +1177,32 @@
       await renderAdminPanel(cachedAdminRecords)
     } catch (_) {
       adminError.textContent = 'Unable to reset recent players. Please try again.'
+    }
+  }
+
+  async function handleClearWinners(showLoginStatus) {
+    const confirmed = window.confirm(
+      'Clear this session? Recent winners and recent players will reset. All-time records stay in All Players.'
+    )
+    if (!confirmed) return
+
+    clearLoginWinnersBtn.disabled = true
+    resetWinnersBtn.disabled = true
+    loginLeaderboardStatus.textContent = ''
+    try {
+      await clearSession()
+      renderLeaderboard([], 'loginLeaderboardList')
+      renderLeaderboard([])
+    } catch (error) {
+      if (showLoginStatus) {
+        loginLeaderboardStatus.textContent = 'Unable to clear recent winners. Please try again.'
+      } else {
+        window.alert('Unable to reset the winners list. Please try again.')
+      }
+      console.error('Failed to clear recent winners:', error)
+    } finally {
+      clearLoginWinnersBtn.disabled = false
+      resetWinnersBtn.disabled = false
     }
   }
 
@@ -1489,6 +1525,7 @@
     loginForm.reset()
     loginError.textContent = ''
     showScreen('login')
+    refreshLoginLeaderboard()
   }
 
   loginForm.addEventListener('submit', (event) => {
@@ -1516,6 +1553,7 @@
   spinBtn.addEventListener('click', spinWheel)
   playAgainBtn.addEventListener('click', resetGame)
   viewRecordsLink.addEventListener('click', openAdminAuthModal)
+  clearLoginWinnersBtn.addEventListener('click', () => handleClearWinners(true))
   adminAuthForm.addEventListener('submit', handleAdminAuthSubmit)
   adminAuthCancelBtn.addEventListener('click', closeAdminAuthModal)
   adminAuthBackdrop.addEventListener('click', closeAdminAuthModal)
@@ -1524,24 +1562,14 @@
     adminError.textContent = ''
     adminAccessLevel = null
     showScreen('login')
+    refreshLoginLeaderboard()
   })
   adminTabAll.addEventListener('click', () => setAdminTab('all'))
   adminTabRecent.addEventListener('click', () => setAdminTab('recent'))
   adminTabAnalytics.addEventListener('click', () => setAdminTab('analytics'))
   downloadCsvBtn.addEventListener('click', () => downloadRecordsCsv(cachedAdminRecords))
   resetRecentBtn.addEventListener('click', handleResetRecent)
-  resetWinnersBtn.addEventListener('click', async () => {
-    const confirmed = window.confirm(
-      'Reset this session? Top 3 and recent players will clear. All-time records stay in admin.'
-    )
-    if (!confirmed) return
-    try {
-      await clearSession()
-      renderLeaderboard([])
-    } catch (_) {
-      window.alert('Unable to reset the winners list. Please try again.')
-    }
-  })
+  resetWinnersBtn.addEventListener('click', () => handleClearWinners(false))
 
   window.addEventListener('resize', () => {
     if (screens.wheel.classList.contains('active')) {
@@ -1557,7 +1585,7 @@
     try {
       applyQuestionBank(await loadQuestionBank())
       setQuestionLoadState()
-      await refreshRecordsCount()
+      await Promise.all([refreshRecordsCount(), refreshLoginLeaderboard()])
     } catch (error) {
       setQuestionLoadState({
         error: error instanceof Error

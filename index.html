@@ -31,6 +31,14 @@
             <li align="left">Answer before the 60-second timer ends</li>
             <li align="left">Faster correct answers earn speed bonus points</li>
           </ul>
+          <section class="login-leaderboard" aria-labelledby="loginLeaderboardTitle">
+            <div class="leaderboard-heading">
+              <h3 id="loginLeaderboardTitle">Recent winners</h3>
+              <button id="clearLoginWinnersBtn" class="reset-winners-btn" type="button">Clear</button>
+            </div>
+            <p id="loginLeaderboardStatus" class="login-leaderboard-status" aria-live="polite"></p>
+            <ol id="loginLeaderboardList" class="leaderboard-list" aria-label="Top three recent winners"></ol>
+          </section>
         </div>
         <form id="loginForm" class="login-card">
           <h2>Player login</h2>

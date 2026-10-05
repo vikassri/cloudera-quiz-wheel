@@ -150,6 +150,31 @@ h1 {
   font-weight: 700;
 }
 
+.login-leaderboard {
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border);
+  text-align: left;
+}
+
+.login-leaderboard .leaderboard-heading {
+  margin-bottom: 0.5rem;
+}
+
+.login-leaderboard-status {
+  color: var(--error);
+  font-size: 0.8rem;
+  min-height: 1.2rem;
+}
+
+.login-leaderboard .leaderboard-list {
+  gap: 0.4rem;
+}
+
+.login-leaderboard .leaderboard-entry {
+  padding: 0.5rem 0.65rem;
+}
+
 .login-card h2 {
   font-size: 1.75rem;
   margin-bottom: 0.5rem;
