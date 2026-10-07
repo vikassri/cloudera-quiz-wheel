@@ -857,6 +857,163 @@
           "answer": "Kafka, HDFS, or cloud object storage for downstream analytics"
         }
       ]
+    },
+    {
+      "id": "cdp-cloud",
+      "label": "CDP Cloud",
+      "color": "#0284C7",
+      "questions": [
+        {
+          "question": "What is the core framework in Cloudera on Cloud that provides unified security, governance, and metadata management across all cloud environments?",
+          "options": [
+            "Hadoop Distributed File System (HDFS)",
+            "Shared Data Experience (SDX)",
+            "Cloudera Data Hub",
+            "Apache Spark"
+          ],
+          "answer": "Shared Data Experience (SDX)"
+        },
+        {
+          "question": "In CDP Public Cloud, how is an \"Environment\" defined?",
+          "options": [
+            "A physical rack of servers managed by Cloudera",
+            "A single data lake storage bucket",
+            "A logical construct connecting the CDP Control Plane to a customer's cloud provider account and network",
+            "A backup configuration file"
+          ],
+          "answer": "A logical construct connecting the CDP Control Plane to a customer's cloud provider account and network"
+        },
+        {
+          "question": "What is the primary function of Cloudera Data Hub?",
+          "options": [
+            "To act as a central repository for user credentials",
+            "To replace the CDP Management Console",
+            "Data Hub delivers familiar, customizable cluster models and templates for complex analytics workloads",
+            "To serve strictly as a cold storage archive"
+          ],
+          "answer": "Data Hub delivers familiar, customizable cluster models and templates for complex analytics workloads"
+        },
+        {
+          "question": "What is a major architectural advantage of using CDP in the public cloud compared to on-premises clusters?",
+          "options": [
+            "It requires the use of proprietary hardware",
+            "It physically binds compute nodes directly to local storage",
+            "It completely separates elastic compute scaling from cloud object storage",
+            "It relies entirely on local HDFS for all cloud storage"
+          ],
+          "answer": "It completely separates elastic compute scaling from cloud object storage"
+        },
+        {
+          "question": "What acts as the central administrative interface to manage cloud environments, users, and workloads in CDP?",
+          "options": [
+            "CDP Management Console (Control Plane)",
+            "Apache Ambari",
+            "Hadoop ResourceManager",
+            "Cloudbreak Dashboard"
+          ],
+          "answer": "CDP Management Console (Control Plane)"
+        },
+        {
+          "question": "Which Apache project acts as the secure edge gateway to provide a single access point and Single Sign-On (SSO) for CDP UIs and APIs?",
+          "options": [
+            "Apache Kafka",
+            "Apache Knox",
+            "Apache Flume",
+            "Apache Spark"
+          ],
+          "answer": "Apache Knox"
+        },
+        {
+          "question": "In CDP, what is the role of an \"IdP\" (Identity Provider) integration?",
+          "options": [
+            "To provide internet bandwidth",
+            "To allow users to log into CDP using their corporate credentials (like Okta or Azure AD) via SAML",
+            "To identify hardware failures",
+            "To manage IP addresses automatically"
+          ],
+          "answer": "To allow users to log into CDP using their corporate credentials (like Okta or Azure AD) via SAML"
+        },
+        {
+          "question": "Why would a customer choose a \"Data Hub\" cluster instead of a containerized \"Data Service\" (like CDW or CML)?",
+          "options": [
+            "They want the cost effective option possible",
+            "Data Hub gives administrators full control over the cluster configuration, which is sometimes needed for legacy or highly custom workloads.",
+            "They want to use Kubernetes",
+            "Data Hub is only for data visualization"
+          ],
+          "answer": "Data Hub gives administrators full control over the cluster configuration, which is sometimes needed for legacy or highly custom workloads."
+        },
+        {
+          "question": "If a customer deletes a CDP Environment in the cloud, what happens to the underlying data stored in their AWS S3 or Azure ADLS buckets?",
+          "options": [
+            "The data is permanently deleted",
+            "The data is locked and held for ransom",
+            "The data remains safely in the customer's cloud storage because compute and storage are decoupled",
+            "The data is transferred to Cloudera's servers"
+          ],
+          "answer": "The data remains safely in the customer's cloud storage because compute and storage are decoupled"
+        },
+        {
+          "question": "Cloudera Management Console allows administrators to set up \"Cloud Credentials.\" What are these used for?",
+          "options": [
+            "To pay for Cloudera training courses",
+            "To allow the CDP Control Plane to obtain the necessary IAM permissions for securely provisioning Cloud resources in the customer's cloud account",
+            "To log into the Apache website",
+            "To authenticate edge devices"
+          ],
+          "answer": "To allow the CDP Control Plane to obtain the necessary IAM permissions for securely provisioning Cloud resources in the customer's cloud account"
+        },
+        {
+          "question": "How does CDP handle encryption of data at rest in the public cloud?",
+          "options": [
+            "It relies entirely on passwords typed into a text file",
+            "It natively integrates with cloud provider Key Management Services (like AWS KMS or Azure Key Vault)",
+            "It does not encrypt data at rest",
+            "It converts all data to binary code which cannot be read"
+          ],
+          "answer": "It natively integrates with cloud provider Key Management Services (like AWS KMS or Azure Key Vault)"
+        },
+        {
+          "question": "In a hybrid Cloudera deployment, what allows a customer to securely burst workloads from their private data center into the public cloud?",
+          "options": [
+            "Using shared USB drives",
+            "The unified Control Plane and Replication Manager enable seamless hybrid data mobility.",
+            "Printing data on-premise and scanning it to the cloud",
+            "Open, unsecured public internet ports"
+          ],
+          "answer": "The unified Control Plane and Replication Manager enable seamless hybrid data mobility."
+        },
+        {
+          "question": "How does Cloudera on Cloud help organizations prevent unexpected \"bill shock\" from public cloud providers?",
+          "options": [
+            "By limiting customers to specific volume of data",
+            "By providing cost management dashboards, resource quotas, and auto-suspension of idle workloads",
+            "By deleting data automatically after 24 hours",
+            "By disabling all machine learning models"
+          ],
+          "answer": "By providing cost management dashboards, resource quotas, and auto-suspension of idle workloads"
+        },
+        {
+          "question": "In the context of Cloudera on Cloud, what is a \"Tenant\"?",
+          "options": [
+            "A user who rents server space physically from Cloudera",
+            "A secure, isolated logical instance of the Cloudera on Cloud platform dedicated entirely to a specific customer organization",
+            "A backup hard drive",
+            "A temporary trial account that deletes after 10 days"
+          ],
+          "answer": "A secure, isolated logical instance of the Cloudera on Cloud platform dedicated entirely to a specific customer organization"
+        },
+        {
+          "question": "What is \"Cloud Bursting\" in the context of Cloudera Hybrid Cloud?",
+          "options": [
+            "Completely shutting down on-premises data centers to move to AWS or Azure permanently",
+            "Dynamically offloading peak analytical workloads to public cloud compute while keeping steady-state data on-premises",
+            "Backing up operational databases to physical tape drives",
+            "Encrypting network traffic using public cloud keys"
+          ],
+          "answer": "Dynamically offloading peak analytical workloads to public cloud compute while keeping steady-state data on-premises"
+        }
+      ]
     }
   ]
 }
