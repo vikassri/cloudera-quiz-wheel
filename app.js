@@ -2,6 +2,7 @@
   'use strict'
 
   const GAME_DURATION_SEC = 60
+  const QUESTIONS_PER_QUIZ = 10
   const POINTS_BASE = 100
   const SPEED_BONUS_MAX = 50
   const SPEED_WINDOW_MS = 8000
@@ -1320,7 +1321,7 @@
   }
 
   function startQuiz() {
-    questionQueue = shuffleArray(selectedTopic.questions)
+    questionQueue = shuffleArray(selectedTopic.questions).slice(0, QUESTIONS_PER_QUIZ)
     currentQuestionIndex = 0
     score = 0
     correctCount = 0
@@ -1419,7 +1420,7 @@
     }
 
     const q = questionQueue[currentQuestionIndex]
-    questionNumber.textContent = `Question ${answeredCount + 1}`
+    questionNumber.textContent = `Question ${answeredCount + 1} of ${questionQueue.length}`
     questionText.textContent = q.text
     feedbackBar.textContent = ''
     feedbackBar.className = 'feedback-bar neutral'
